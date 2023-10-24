@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { Request } from 'express';
 
 function convertTZ(date: any, tzString: string) {
   return new Date((typeof date === 'string' ? new Date(date) : date).toLocaleString('en-US', { timeZone: tzString }));
@@ -32,4 +33,11 @@ function hashToken(token: string) {
   return hasher.digest('hex');
 }
 
-export { convertTZ, hash, comparePassword, hashToken };
+function parseCookie(cookieName: string, req: Request) {
+  const cookies = req.headers.cookie?.split(';');
+  const token = cookies?.find((cookie) => cookie.trim().startsWith(`${cookieName}=`))?.split('=')[1];
+
+  return token;
+}
+
+export { convertTZ, hash, comparePassword, hashToken, parseCookie };

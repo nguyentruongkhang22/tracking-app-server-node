@@ -7,6 +7,7 @@ const user = new mongoose.Schema({
   passwordHash: { type: String, required: true },
   active: { type: Boolean, required: true, default: true },
   deviceIds: [{ type: Number }],
+  token: { type: String },
 });
 
 const User = mongoose.model('User', user);
@@ -20,7 +21,6 @@ async function getOne(id: number) {
 }
 
 async function createOne(user: any) {
-  user.passwordHash = hash(user.password);
   return await User.create(user);
 }
 

@@ -1,25 +1,7 @@
 import createHttpError from 'http-errors';
-import { count, createOne, getAll, getOne, updateOne } from '../models/user.model';
+import { getAll, getOne, updateOne } from '../models/user.model';
 import { Request, Response } from 'express';
 import { Device } from '../models/device.model';
-import { hash } from '../common/utils';
-
-async function newUser(req: Request, res: Response) {
-  try {
-    const user = req.body;
-    user.id = (await count()) + 1;
-    const result = await createOne(user);
-
-    if (!result) {
-      throw createHttpError(500, 'User not created');
-    }
-
-    res.status(200).json(result);
-  } catch (error) {
-    console.error(error);
-    res.json(error);
-  }
-}
 
 async function allUsers(req: Request, res: Response) {
   try {
@@ -102,4 +84,4 @@ async function getUserDevices(req: Request, res: Response) {
   }
 }
 
-export { newUser, allUsers, getUser, updateUser, deactivateUser, activateUser, getUserDevices };
+export { allUsers, getUser, updateUser, deactivateUser, activateUser, getUserDevices };
