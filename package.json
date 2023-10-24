@@ -6,12 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node server.ts",
-    "dev": "nodemon server.ts"
+    "dev": "nodemon server.ts",
+    "swagger-autogen": "node common/swagger.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "and": "^0.0.3",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -22,6 +24,8 @@
     "moment": "^2.29.4",
     "mongoose": "^7.3.4",
     "morgan": "^1.10.0",
+    "swagger-autogen": "^2.23.6",
+    "swagger-ui-express": "^5.0.0",
     "uuid": "^9.0.1",
     "ws": "^8.14.2"
   },
@@ -31,6 +35,7 @@
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.4",
     "@types/morgan": "^1.9.4",
+    "@types/swagger-ui-express": "^4.1.5",
     "@types/uuid": "^9.0.6",
     "@types/ws": "^8.5.8"
   }
