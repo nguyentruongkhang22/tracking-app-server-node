@@ -1,6 +1,15 @@
 const swaggerAutogen = require("swagger-autogen");
 
 const outputFile = "../swagger_output.json";
-const endpointsFiles = ["../routers/auth.router.ts", "../routers/device.router.ts", "../routers/index.router.ts", "../routers/user.router.ts"];
+const endpointsFiles = ["../routers/index.router.ts"];
+const doc = {
+  info: {
+    title: "My API",
+    description: "Description",
+  },
+  host: "localhost:3003",
+  basePath: "/v1", // by default: '/'
+  schemes: ["http"],
+};
 
-swaggerAutogen(outputFile, endpointsFiles);
+swaggerAutogen(outputFile, endpointsFiles, doc);
