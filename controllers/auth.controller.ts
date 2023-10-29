@@ -1,32 +1,41 @@
-import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import { v4 } from 'uuid';
+import { Request, Response } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { v4 } from "uuid";
 
-import { User, count, createOne, getOne } from '../models/user.model';
-import { comparePassword, hash, hashToken } from '../common/utils';
-import createHttpError from 'http-errors';
+import { User, count, createOne, getOne } from "../models/user.model";
+import { comparePassword, hash, hashToken } from "../common/utils";
+import createHttpError from "http-errors";
 
 async function login(req: Request, res: Response) {
   try {
     const { username, password } = req.body;
 
     const user = await User.findOne({ username });
-    const hashedPassword: string = user?.passwordHash || '';
+    const hashedPassword: string = user?.passwordHash || "";
 
     if (comparePassword(password, hashedPassword)) {
-      const loginCookie = jwt.sign({ user }, process.env.TOKEN_SEED || '', { expiresIn: '1h' });
+      const loginCookie = jwt.sign({ user }, process.env.TOKEN_SEED || "", { expiresIn: "1h" });
       const uuid: string = v4();
-      const wsToken = jwt.sign({ uuid }, process.env.TOKEN_SEED || '', { expiresIn: '1h' });
+      const wsToken = jwt.sign({ uuid }, process.env.TOKEN_SEED || "", { expiresIn: "1h" });
 
-      res.cookie('ws-token', wsToken, { httpOnly: true, sameSite: 'none', secure: true });
-      res.cookie('login-token', loginCookie, { httpOnly: true, sameSite: 'none', secure: true });
-      //@ts-ignore
-      res.header('Access-Control-Allow-Credentials', true);
+      res.cookie("ws-token", wsToken, { httpOnly: true, secure: true });
+      res.cookie("login-token", loginCookie, { httpOnly: true, secure: true });
+
+      var result = {
+        username: user?.username,
+        id: user?.id,
+        loginToken: loginCookie,
+        wsToken,
+      };
     } else {
-      throw createHttpError(401, 'Invalid username or password');
+      throw createHttpError(401, "Invalid username or password");
     }
 
-    res.status(200).json({ message: 'Login successful' });
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      result,
+    });
   } catch (error) {
     console.error(error);
     res.status(401).json(error);
@@ -35,9 +44,9 @@ async function login(req: Request, res: Response) {
 
 async function logout(req: Request, res: Response) {
   try {
-    res.clearCookie('login-token');
-    res.clearCookie('ws-token');
-    res.status(200).json({ message: 'Logout successful' });
+    res.clearCookie("login-token");
+    res.clearCookie("ws-token");
+    res.status(200).json({ success: true, message: "Logout successful" });
   } catch (error) {
     console.error(error);
     res.json(error);
@@ -53,20 +62,53 @@ async function register(req: Request, res: Response) {
       id: (await count()) + 1,
     };
 
-    const result = await createOne(user);
+    const created = await createOne(user);
 
-    if (!result) {
-      throw createHttpError(403, 'User not created');
+    if (!created) {
+      throw createHttpError(403, "User not created");
     }
 
-    const cookie = jwt.sign({ user }, process.env.TOKEN_SEED || '', { expiresIn: '1h' });
-    res.cookie('login-token', cookie);
+    const cookie = jwt.sign({ user }, process.env.TOKEN_SEED || "", { expiresIn: "1h" });
+    res.cookie("login-token", cookie);
 
-    res.status(200).json(result);
+    res.status(200).json({
+      success: true,
+      message: created,
+      result: {
+        username: user.username,
+        id: user.id,
+        loginToken: cookie,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.json(error);
   }
 }
 
-export { login, logout, register };
+async function verify(req: Request, res: Response) {
+  try {
+    const { token } = req.body;
+
+    //@ts-ignore
+    const decodedUser: JwtPayload = jwt.verify(token, process.env.TOKEN_SEED || "").user;
+    const user = await getOne(decodedUser.id || "");
+
+    if (!user) {
+      throw createHttpError(401, "Invalid token");
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Token is valid",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({
+      success: false,
+      message: error,
+    });
+  }
+}
+
+export { login, logout, register, verify };
