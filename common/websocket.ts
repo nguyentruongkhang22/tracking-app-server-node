@@ -1,21 +1,14 @@
-import { WebSocket, WebSocketServer } from "ws";
+import { WebSocketServer } from "ws";
+import { server } from "../server";
 
-const wss = new WebSocketServer({ port: 3004 });
+const wss = new WebSocketServer({ server, path: "/ws" });
 
 wss.on("connection", function connection(ws, request) {
-  console.log(" -- request: ", request);
-  authenticate(ws);
-
   ws.on("error", console.error);
 
-  ws.on("message", function message(data) {
+  ws.on("message", function message(data: any) {
     console.log("received: %s", data);
   });
 
   ws.send("something");
 });
-
-function authenticate(ws: WebSocket) {
-  console.log(" -- ws: ", ws);
-  // ws.protocols
-}
