@@ -18,7 +18,6 @@ const corsOptions = {
 const middlewares = [cors(corsOptions), morgan("dev"), express.json(), helmet()];
 const swaggerFile = require("./swagger_output.json");
 const server = http.createServer(app);
-const wss: WebSocketServer = new WebSocketServer({ server, path: "/ws" });
 
 app.use(middlewares);
 app.use("/v1", indexRouter);
@@ -28,4 +27,19 @@ server.listen(process.env.PORT || 3003, () => {
   console.log(`Server listening on port ${process.env.PORT || 3003}`);
 });
 
-export { wss };
+/*
+  WebSocket
+*/
+const wss: WebSocketServer = new WebSocketServer({
+  server,
+  path: "/ws",
+  host: process.env.NODE_ENV == "dev" ? "localhost" : "api.lackadaisical.net",
+});
+
+wss.on("connection", (ws) => {
+  ws.on("message", (message) => {
+    console.log(`Received message => ${message}`);
+    ws.send(`Hello, you sent => ${message}`);
+  });
+  ws.send("Hello, I am a server");
+});
