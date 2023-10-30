@@ -1,14 +1,8 @@
-import { WebSocketServer } from "ws";
-import { server } from "../server";
-
-const wss = new WebSocketServer({ server, path: "/ws" });
-
-wss.on("connection", function connection(ws, request) {
-  ws.on("error", console.error);
-
-  ws.on("message", function message(data: any) {
-    console.log("received: %s", data);
+import { wss } from "../server";
+wss.on("connection", (ws) => {
+  ws.on("message", (message) => {
+    console.log(`Received message => ${message}`);
+    ws.send(`Hello, you sent => ${message}`);
   });
-
-  ws.send("something");
+  ws.send("Hello, I am a server");
 });
