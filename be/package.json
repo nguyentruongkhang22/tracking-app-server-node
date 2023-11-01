@@ -2,7 +2,7 @@
   "name": "tracking-app-server-node",
   "version": "1.0.0",
   "description": "",
-  "main": "app.ts",
+  "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node server.ts",
@@ -24,6 +24,7 @@
     "moment": "^2.29.4",
     "mongoose": "^7.3.4",
     "morgan": "^1.10.0",
+    "socket.io": "^4.7.2",
     "swagger-autogen": "^2.23.6",
     "swagger-ui-express": "^5.0.0",
     "uuid": "^9.0.1",
