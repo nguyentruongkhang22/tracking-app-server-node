@@ -11,7 +11,7 @@ import { WebSocketServer } from "ws";
 
 const app = express();
 const corsOptions = {
-  origin: process.env.NODE_ENV == "dev" ? "http://localhost:3000" : "https://www.lackadaisical.net",
+  origin: ["http://localhost:3000", "http://127.0.0.1:3000", "https://www.lackadaisical.net"],
   credentials: true,
 };
 
@@ -33,7 +33,7 @@ server.listen(process.env.PORT || 3003, () => {
 const wss: WebSocketServer = new WebSocketServer({
   server,
   path: "/ws",
-  host: process.env.NODE_ENV == "dev" ? "localhost" : "api.lackadaisical.net",
+  host: process.env.NODE_ENV == "dev" ? "127.0.0.1" : "api.lackadaisical.net",
 });
 
 wss.on("connection", (ws) => {
