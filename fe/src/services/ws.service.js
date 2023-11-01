@@ -1,9 +1,7 @@
 import io from "socket.io-client";
 
 export class WsService {
-  static socket = io("http://localhost:3003");
-
-  // static url = "ws://127.0.0.1:3003/ws";
+  static socket = io();
 
   static init() {
     // client-side
