@@ -34,6 +34,7 @@ const cspPocicies = {
       "https://use.fontawesome.com/releases/v5.0.8/css/all.css",
       "https://fonts.googleapis.com/css/*",
       "https://fonts.googleapis.com/icon?family=Material+Icons",
+      "http://fonts.googleapis.com/icon?family=Material+Icons",
       "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css",
       "https://use.fontawesome.com/releases/v5.0.8/webfonts/*",
       "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic",
@@ -47,8 +48,6 @@ const cspPocicies = {
       SELF,
     ],
     "worker-src": [NONE],
-    "block-all-mixed-content": true,
-    "upgrade-insecure-requests": true,
   },
 };
 
