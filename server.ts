@@ -69,8 +69,8 @@ app.use("/v1", indexRouter);
 app.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerFile));
 app.use(express.static(path.join(__dirname, "dist")));
 
-server.listen(process.env.PORT || 3003, () => {
-  console.log(`Server listening on port ${process.env.PORT || 3003}`);
+server.listen(process.env.PORT || 3000, () => {
+  console.log(`Server listening on port ${process.env.PORT || 3000}`);
 });
 
 const io = new Server(server);
