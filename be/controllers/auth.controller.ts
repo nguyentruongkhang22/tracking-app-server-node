@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { v4 } from "uuid";
 
 import { User, count, createOne, getOne } from "../models/user.model";
 import { comparePassword, hash, hashToken } from "../common/utils";
@@ -14,18 +13,16 @@ async function login(req: Request, res: Response) {
     const hashedPassword: string = user?.passwordHash || "";
 
     if (comparePassword(password, hashedPassword)) {
-      const loginCookie = jwt.sign({ user }, process.env.TOKEN_SEED || "", { expiresIn: "1h" });
-      const uuid: string = v4();
-      const wsToken = jwt.sign({ uuid }, process.env.TOKEN_SEED || "", { expiresIn: "1h" });
+      const loginCookie = jwt.sign({ user }, process.env.TOKEN_SEED || "", {
+        expiresIn: "1h",
+      });
 
-      res.cookie("ws-token", wsToken, { httpOnly: true, secure: true });
       res.cookie("login-token", loginCookie, { httpOnly: true, secure: true });
 
       var result = {
         username: user?.username,
         id: user?.id,
         loginToken: loginCookie,
-        wsToken,
       };
     } else {
       throw createHttpError(401, "Invalid username or password");
@@ -68,7 +65,9 @@ async function register(req: Request, res: Response) {
       throw createHttpError(403, "User not created");
     }
 
-    const cookie = jwt.sign({ user }, process.env.TOKEN_SEED || "", { expiresIn: "1h" });
+    const cookie = jwt.sign({ user }, process.env.TOKEN_SEED || "", {
+      expiresIn: "1h",
+    });
     res.cookie("login-token", cookie);
 
     res.status(200).json({
@@ -90,8 +89,10 @@ async function verify(req: Request, res: Response) {
   try {
     const { token } = req.body;
 
-    //@ts-ignore
-    const decodedUser: JwtPayload = jwt.verify(token, process.env.TOKEN_SEED || "").user;
+    const decodedUser: JwtPayload = jwt.verify(
+      token,
+      process.env.TOKEN_SEED || "" //@ts-ignore
+    ).user;
     const user = await getOne(decodedUser.id || "");
 
     if (!user) {

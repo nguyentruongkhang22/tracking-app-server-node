@@ -34,12 +34,12 @@ const routes = [
         name: "Notifications",
         component: Notifications,
       },
+      {
+        path: "/map",
+        name: "Map",
+        component: Map,
+      },
     ],
-  },
-  {
-    path: "/map",
-    name: "Map",
-    component: Map,
   },
   {
     path: "/login",

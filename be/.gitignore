@@ -1,6 +1,7 @@
-/.env
 node_modules
 package-lock.json
 yarn.lock
 swagger_output.json
 dist
+dist/
+.env

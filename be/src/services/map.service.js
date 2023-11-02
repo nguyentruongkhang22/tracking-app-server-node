@@ -27,13 +27,7 @@ export class MapService {
     let marker = L.marker(defaultCoord);
     this.layers.push(marker);
     this.map.addLayer(marker);
-
-    for (let i = 0; i < 10; i++) {
-      setInterval(() => {
-        defaultCoord[0] += 0.00001;
-        this.setMarker(defaultCoord);
-      }, 1000);
-    }
+    this.setMarker(defaultCoord);
 
     return map;
   }
@@ -42,6 +36,7 @@ export class MapService {
     let newMarker = L.marker(coords);
     this.map.addLayer(newMarker);
     this.map.removeLayer(this.layers.pop());
+
     this.layers.push(newMarker);
   }
 }
