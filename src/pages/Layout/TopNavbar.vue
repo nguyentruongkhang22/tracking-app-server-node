@@ -4,14 +4,15 @@
       <div class="md-toolbar-section-start">
         <h3 class="md-title">{{ $route.name }}</h3>
       </div>
-      <div class="md-toolbar-section-end">
-        <md-button
-          class="md-just-icon md-simple md-toolbar-toggle"
-          :class="{ toggled: $sidebar.showSidebar }"
-          @click="toggleSidebar"
-        >
-        </md-button>
-      </div>
+      <md-button
+        class="md-just-icon md-simple md-toolbar-toggle"
+        :class="{ toggled: $sidebar.showSidebar }"
+        @click="toggleSidebar"
+      >
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </md-button>
     </div>
   </md-toolbar>
 </template>
@@ -21,16 +22,7 @@ export default {
   data() {
     return {
       selectedEmployee: null,
-      employees: [
-        "Jim Halpert",
-        "Dwight Schrute",
-        "Michael Scott",
-        "Pam Beesly",
-        "Angela Martin",
-        "Kelly Kapoor",
-        "Ryan Howard",
-        "Kevin Malone",
-      ],
+      employees: [],
     };
   },
   methods: {

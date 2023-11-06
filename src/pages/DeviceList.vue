@@ -10,7 +10,7 @@
             <p class="category">Here is a subtitle for this table</p>
           </md-card-header>
           <md-card-content>
-            <ordered-table user-devices="{{devices}}"></ordered-table>
+            <ordered-table></ordered-table>
           </md-card-content>
         </md-card>
       </div>

@@ -4,7 +4,6 @@ import Dashboard from "@/pages/Dashboard.vue";
 import UserProfile from "@/pages/UserProfile.vue";
 import DeviceList from "@/pages/DeviceList.vue";
 import Map from "@/pages/Map.vue";
-import Notifications from "@/pages/Notifications.vue";
 import AuthService from "@/services/auth.service";
 
 const routes = [
@@ -12,7 +11,7 @@ const routes = [
     path: "/",
     component: DashboardLayout,
     redirect: "/dashboard",
-    beforeEnter: AuthService.guard,
+    // beforeEnter: AuthService.guard,
     children: [
       {
         path: "dashboard",
@@ -28,11 +27,6 @@ const routes = [
         path: "device-list",
         name: "Device List",
         component: DeviceList,
-      },
-      {
-        path: "notifications",
-        name: "Notifications",
-        component: Notifications,
       },
       {
         path: "/map",
