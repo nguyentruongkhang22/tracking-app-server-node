@@ -43,7 +43,6 @@ Vue.use(VueRouter);
 Vue.use(MaterialDashboard);
 Vue.use(GlobalComponents);
 Vue.use(GlobalDirectives);
-Vue.use(Notifications);
 
 /* eslint-disable no-new */
 new Vue({

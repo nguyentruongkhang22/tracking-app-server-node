@@ -1,5 +1,4 @@
 import DashboardLayout from "@/pages/Layout/DashboardLayout.vue";
-
 import Dashboard from "@/pages/Dashboard.vue";
 import UserProfile from "@/pages/UserProfile.vue";
 import DeviceList from "@/pages/DeviceList.vue";
@@ -11,7 +10,7 @@ const routes = [
     path: "/",
     component: DashboardLayout,
     redirect: "/dashboard",
-    // beforeEnter: AuthService.guard,
+    beforeEnter: AuthService.guard,
     children: [
       {
         path: "dashboard",
