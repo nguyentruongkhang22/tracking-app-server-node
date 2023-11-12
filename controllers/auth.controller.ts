@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { User, count, createOne, getOne } from "../models/user.model";
-import { comparePassword, hash, hashToken } from "../common/utils";
+import { comparePassword, decodeUser, hash, hashToken } from "../common/utils";
 import createHttpError from "http-errors";
 
 async function login(req: Request, res: Response) {
@@ -88,12 +88,7 @@ async function register(req: Request, res: Response) {
 async function verify(req: Request, res: Response) {
   try {
     const { token } = req.body;
-
-    const decodedUser: JwtPayload = jwt.verify(
-      token,
-      process.env.TOKEN_SEED || "" //@ts-ignore
-    ).user;
-    const user = await getOne(decodedUser.id || "");
+    const user = await decodeUser(token);
 
     if (!user) {
       throw createHttpError(401, "Invalid token");

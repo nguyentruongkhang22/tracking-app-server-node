@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import { hash } from '../common/utils';
+import mongoose from "mongoose";
+import { hash } from "../common/utils";
 
 const user = new mongoose.Schema({
   id: { type: Number, required: true, unique: true },
@@ -8,9 +8,10 @@ const user = new mongoose.Schema({
   active: { type: Boolean, required: true, default: true },
   deviceIds: [{ type: Number }],
   token: { type: String },
+  socketId: { type: String },
 });
 
-const User = mongoose.model('User', user);
+const User = mongoose.model("User", user);
 
 async function getAll() {
   return await User.find();

@@ -41,7 +41,7 @@ export default {
     };
   },
   mounted() {
-    ax.get("/v1/devices").then((res) => {
+    ax.get("/v1/users/devices").then((res) => {
       this.devices = res.data.map((device) => {
         return {
           id: device.id,

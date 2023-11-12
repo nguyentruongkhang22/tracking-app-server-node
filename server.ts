@@ -1,65 +1,30 @@
 import cors from "cors";
 import swaggerUiExpress from "swagger-ui-express";
 import http from "http";
-import { Server } from "socket.io";
-import path from "path";
-import {
-  expressCspHeader,
-  ExpressCSPParams,
-  NONE,
-  SELF,
-} from "express-csp-header";
-
-import "./database/config";
 import helmet from "helmet";
+import path from "path";
 import express from "express";
 import morgan from "morgan";
+
+import { Server } from "socket.io";
+import { expressCspHeader } from "express-csp-header";
 import { indexRouter } from "./routers/index.router";
 
-const app = express();
-const corsOptions = {
-  origin: ["*"],
-  credentials: true,
-};
+import "./database/config";
+import "./common/event";
+import { decodeUser } from "./common/utils";
+import { eventHandler } from "./common/event";
 
-const cspPocicies = {
-  directives: {
-    "script-src": [
-      SELF,
-      "https://code.jquery.com/jquery-3.6.0.min.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js",
-    ],
-    "style-src": [
-      SELF,
-      "https://use.fontawesome.com/releases/v5.0.8/css/all.css",
-      "https://fonts.googleapis.com/css/*",
-      "https://fonts.googleapis.com/icon?family=Material+Icons",
-      "http://fonts.googleapis.com/icon?family=Material+Icons",
-      "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css",
-      "https://use.fontawesome.com/releases/v5.0.8/webfonts/*",
-      "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic",
-    ],
-    "img-src": [
-      "*",
-      "data:",
-      "https://c.tile.osm.org/*",
-      "https://*.tile.osm.org/*",
-      "https://*.tile.osm.org/*/*/*.png",
-      SELF,
-    ],
-    "worker-src": [NONE],
-  },
-};
+const app = express();
 
 const middlewares = [
-  cors(corsOptions),
   morgan("dev"),
   express.json(),
-  helmet({
-    contentSecurityPolicy: false,
-  }),
-  expressCspHeader(cspPocicies),
+  helmet(require("./config/helmetConfig.json")),
+  expressCspHeader(require("./config/cspPolicies")),
+  cors(require("./config/corsOptions")),
 ];
+
 const swaggerFile = require("./swagger_output.json");
 const server = http.createServer(app);
 
@@ -74,19 +39,20 @@ server.listen(process.env.PORT || 3000, () => {
 
 const io = new Server(server);
 
-// WEBSOCKET CONNECTION
 io.on("connection", (socket) => {
-  console.log("WEBSOCKET Connected 💯 💯 💯");
-  socket.on("change", (deviceStatus) => {
-    console.log(`${deviceStatus ? "on" : "off"}`);
-  });
+  console.log(" -- socket: ", socket.id);
+  socket.on("validate", async (loginToken) => {
+    const user = await decodeUser(loginToken);
 
-  socket.on("patch", async (statusChange, deviceId) => {
-    console.log(statusChange, deviceId);
-    socket.broadcast.emit(
-      "sendFromDevice",
-      statusChange.deviceStatus,
-      deviceId
-    );
+    if (!user) {
+      socket.disconnect();
+    } else {
+      user.socketId = socket.id;
+      await user?.save();
+    }
   });
+});
+
+eventHandler.on("updateTimeVariantData", (data) => {
+  io.to(data.socketId).emit("updateTimeVariantData", data.timeVariantData);
 });

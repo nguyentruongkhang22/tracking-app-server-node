@@ -1,7 +1,8 @@
-import createHttpError from 'http-errors';
-import { getAll, getOne, updateOne } from '../models/user.model';
-import { Request, Response } from 'express';
-import { Device } from '../models/device.model';
+import createHttpError from "http-errors";
+import { getAll, getOne, updateOne } from "../models/user.model";
+import { Request, Response } from "express";
+import { Device } from "../models/device.model";
+import { decodeUser, parseCookie } from "../common/utils";
 
 async function allUsers(req: Request, res: Response) {
   try {
@@ -19,7 +20,7 @@ async function getUser(req: Request, res: Response) {
     const result = await getOne(parseInt(id));
 
     if (!result) {
-      throw createHttpError(404, 'User not found');
+      throw createHttpError(404, "User not found");
     }
 
     res.status(200).json(result);
@@ -68,14 +69,14 @@ async function activateUser(req: Request, res: Response) {
 
 async function getUserDevices(req: Request, res: Response) {
   try {
-    const id = req.params.id;
-    const user = await getOne(parseInt(id));
-    console.log(' -- user: ', user);
+    //@ts-ignore
+    const token = parseCookie("login-token", req);
+    const user = await decodeUser(token);
 
     if (!user) {
-      throw createHttpError(404, 'User not found');
+      throw createHttpError(404, "User not found");
     }
-    const userDevices = Device.find({ id: { $in: user?.deviceIds } });
+    const userDevices = await Device.find({ id: { $in: user?.deviceIds } });
 
     res.status(200).json(userDevices);
   } catch (error) {
@@ -84,4 +85,11 @@ async function getUserDevices(req: Request, res: Response) {
   }
 }
 
-export { allUsers, getUser, updateUser, deactivateUser, activateUser, getUserDevices };
+export {
+  allUsers,
+  getUser,
+  updateUser,
+  deactivateUser,
+  activateUser,
+  getUserDevices,
+};

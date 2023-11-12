@@ -16,7 +16,7 @@ export default {
   name: "Map",
   mounted() {
     MapService.initMap();
-    WsService.init();
+    WsService.initWs();
   },
 };
 </script>
