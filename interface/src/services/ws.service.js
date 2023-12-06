@@ -1,7 +1,7 @@
 import io from "socket.io-client";
 import MapService from "./map.service";
 export class WsService {
-  static socket = io();
+  static socket = io.connect("http://localhost:3000");
 
   static initWs() {
     // client-side

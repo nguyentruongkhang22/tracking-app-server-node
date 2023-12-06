@@ -37,7 +37,7 @@ server.listen(process.env.PORT || 3000, () => {
   console.log(`Server listening on port ${process.env.PORT || 3000}`);
 });
 
-const io = new Server(server);
+const io = new Server(server, { cors: { origin: "http://localhost:8080" } });
 
 io.on("connection", (socket) => {
   console.log(" -- socket: ", socket.id);
