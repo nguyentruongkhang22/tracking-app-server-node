@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node common/swagger.ts && ts-node server.ts",
-    "dev": "nodemon server.ts",
+    "dev": "vue-cli-service serve --open",
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"

@@ -43,11 +43,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: "Vehicle MS",
-    },
-    sidebarBackgroundImage: {
-      type: String,
-      default: require("@/assets/img/sidebar-2.jpg"),
+      default: "Management System",
     },
     imgLogo: {
       type: String,
@@ -77,9 +73,7 @@ export default {
   },
   computed: {
     sidebarStyle() {
-      return {
-        backgroundImage: `url(${this.sidebarBackgroundImage})`,
-      };
+      return {};
     },
   },
 };
@@ -89,5 +83,9 @@ export default {
   .nav-mobile-menu {
     display: none;
   }
+}
+
+.sidebar {
+  background-color: #688E26 !important;
 }
 </style>

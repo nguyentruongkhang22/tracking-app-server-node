@@ -53,6 +53,7 @@ export class MapService {
     let newMarker = L.marker(coords);
     this.map.addLayer(newMarker);
     this.map.removeLayer(this.layers.pop());
+    this.map.panTo(coords)
 
     this.layers.push(newMarker);
   }
